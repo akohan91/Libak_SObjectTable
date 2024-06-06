@@ -1,0 +1,1 @@
+![LibAK logo](assets/small_logo.png)
