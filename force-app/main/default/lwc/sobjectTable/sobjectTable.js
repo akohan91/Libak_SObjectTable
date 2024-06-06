@@ -18,7 +18,7 @@ export default class SobjectTable extends LightningElement {
 	 * The name of the Apex controller that can override default (Apex implementation required).
 	 * @type {string}
 	 */
-	@api controllerName;
+	@api serviceName;
 
 	/**
 	 * The name of the Sobject to fetch records from.
@@ -146,7 +146,7 @@ export default class SobjectTable extends LightningElement {
 				referenceFieldPaths,
 				addressFieldPaths,
 			} = await init({
-				controllerName: this.controllerName,
+				serviceName: this.serviceName,
 				inputDataJSON: JSON.stringify({
 					sobjectName:    this.sobjectName,
 					selectFields:   this.selectFields,

@@ -5,9 +5,11 @@ public with sharing class SobjectTableCtrl {
 
 	/* FACTORY METHOD */
 
-	private static SobjectTableService controllerInstance(String controllerName, String inputDataJSON) {
-		controllerName = controllerName == null ? SobjectTableServiceDefault.class.getName() : controllerName;
-		String constructorName = controllerName + '.Constructor';
+	private static SobjectTableService controllerInstance(String serviceName, String inputDataJSON) {
+		if (serviceName == null) {
+			throw new SobjectTableException('SObject Table service ' + serviceName + ' not found.');
+		}
+		String constructorName = serviceName + '.Constructor';
 		Type constructorType = Type.forName(constructorName);
 
 		if (constructorType == null) {
@@ -19,9 +21,9 @@ public with sharing class SobjectTableCtrl {
 	/* PUBLIC METHODS */
 
 	@AuraEnabled
-	public static Map<String, Object> init(String controllerName, String inputDataJSON){
+	public static Map<String, Object> init(String serviceName, String inputDataJSON){
 		try {
-			SobjectTableService sobjectTableService = controllerInstance(controllerName, inputDataJSON);
+			SobjectTableService sobjectTableService = controllerInstance(serviceName, inputDataJSON);
 			return new Map<String, Object>{
 				'records'             => sobjectTableService.tableRows(),
 				'recordsCount'        => sobjectTableService.recordsCount(),
