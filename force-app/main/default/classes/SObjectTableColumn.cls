@@ -3,7 +3,7 @@
  * The class represents the column definition of lwc data table column
  * https://developer.salesforce.com/docs/component-library/bundle/lightning-datatable/documentation
  */
-public with sharing class DataTableColumn {
+public with sharing class SObjectTableColumn {
 
 	@AuraEnabled
 	public List<HeaderAction> actions {get;private set;}
@@ -50,68 +50,68 @@ public with sharing class DataTableColumn {
 	@AuraEnabled
 	public Boolean wrapText {get;private set;}
 
-	public DataTableColumn(String fieldName, String label, String type) {
+	public SObjectTableColumn(String fieldName, String label, String type) {
 		this.fieldName = fieldName;
 		this.label = label;
 		this.type = type;
 	}
 
-	public DataTableColumn withHeaderActions(List<HeaderAction> headerActions) {
+	public SObjectTableColumn withHeaderActions(List<HeaderAction> headerActions) {
 		this.actions = headerActions;
 		return this;
 	}
 
-	public DataTableColumn withCellAttributes(Map<String, Object> cellAttributes) {
+	public SObjectTableColumn withCellAttributes(Map<String, Object> cellAttributes) {
 		this.cellAttributes = cellAttributes;
 		return this;
 	}
 
-	public DataTableColumn withColumnKey(String columnKey) {
+	public SObjectTableColumn withColumnKey(String columnKey) {
 		this.columnKey = columnKey;
 		return this;
 	}
 
-	public DataTableColumn withIconName(String iconName) {
+	public SObjectTableColumn withIconName(String iconName) {
 		this.iconName = iconName;
 		return this;
 	}
 
-	public DataTableColumn withFixedWidth(Integer fixedWidth) {
+	public SObjectTableColumn withFixedWidth(Integer fixedWidth) {
 		this.fixedWidth = fixedWidth;
 		return this;
 	}
 
-	public DataTableColumn withInitialWidth(Integer initialWidth) {
+	public SObjectTableColumn withInitialWidth(Integer initialWidth) {
 		this.initialWidth = initialWidth;
 		return this;
 	}
 
-	public DataTableColumn withEditable(Boolean isEditable) {
+	public SObjectTableColumn withEditable(Boolean isEditable) {
 		this.editable = isEditable;
 		return this;
 	}
 
-	public DataTableColumn withSortable(Boolean isSortable) {
+	public SObjectTableColumn withSortable(Boolean isSortable) {
 		this.sortable = isSortable;
 		return this;
 	}
 
-	public DataTableColumn withHideDefaultActions(Boolean isHideDefaultActions) {
+	public SObjectTableColumn withHideDefaultActions(Boolean isHideDefaultActions) {
 		this.hideDefaultActions = isHideDefaultActions;
 		return this;
 	}
 
-	public DataTableColumn withHideLabel(Boolean isHideLabel) {
+	public SObjectTableColumn withHideLabel(Boolean isHideLabel) {
 		this.hideLabel = isHideLabel;
 		return this;
 	}
 
-	public DataTableColumn withWrapText(Boolean isWrapText) {
+	public SObjectTableColumn withWrapText(Boolean isWrapText) {
 		this.wrapText = isWrapText;
 		return this;
 	}
 
-	public DataTableColumn withTypeAttributes(Map<String, Object> typeAttributes) {
+	public SObjectTableColumn withTypeAttributes(Map<String, Object> typeAttributes) {
 		this.typeAttributes = typeAttributes;
 		return this;
 	}

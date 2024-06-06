@@ -39,7 +39,7 @@ public with sharing class SobjectTableServiceDefault extends SobjectTableService
 	private List<DynamicSOQLFunction> retriveFunctions;
 	private List<String> addressFieldPaths;
 	private List<String> referenceFieldPaths;
-	private List<DataTableColumn> dataTableColumns;
+	private List<SObjectTableColumn> dataTableColumns;
 	private Map<String, SobjectFieldPathInterface> targetFieldPathItemByPath;
 
 	public class Constructor implements SobjectTableService.IConstructable {
@@ -110,9 +110,9 @@ public with sharing class SobjectTableServiceDefault extends SobjectTableService
 			return this.dataTableColumns;
 		}
 		this.processFieldPaths();
-		this.dataTableColumns = new List<DataTableColumn>();
+		this.dataTableColumns = new List<SObjectTableColumn>();
 		for (SobjectFieldPathInterface fieldPath : this.targetFieldPathItemByPath.values()) {
-			DataTableColumn dataTableColumn;
+			SObjectTableColumn dataTableColumn;
 
 			if (fieldPath.targetFieldDescribe().getType() == Schema.DisplayType.ID ||
 				fieldPath.targetFieldDescribe().getType() == Schema.DisplayType.REFERENCE ||
@@ -133,8 +133,8 @@ public with sharing class SobjectTableServiceDefault extends SobjectTableService
 					this.dataTableTypeFromDisplayType(fieldPath.targetFieldDescribe().getType())
 				);
 			}
-			dataTableColumn.withColumnKey(fieldPath.path());
-			dataTableColumn.withSortable(fieldPath.targetFieldDescribe().isSortable());
+			SObjectTableColumn.withColumnKey(fieldPath.path());
+			SObjectTableColumn.withSortable(fieldPath.targetFieldDescribe().isSortable());
 			this.dataTableColumns.add(dataTableColumn);
 		}
 		return this.dataTableColumns;
