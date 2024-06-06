@@ -5,7 +5,7 @@ public with sharing class SobjectTableCtrl {
 
 	/* FACTORY METHOD */
 
-	private static SobjectTableServiceAbstract controllerInstance(String controllerName, String inputDataJSON) {
+	private static SobjectTableService controllerInstance(String controllerName, String inputDataJSON) {
 		controllerName = controllerName == null ? SobjectTableServiceDefault.class.getName() : controllerName;
 		String constructorName = controllerName + '.Constructor';
 		Type constructorType = Type.forName(constructorName);
@@ -13,7 +13,7 @@ public with sharing class SobjectTableCtrl {
 		if (constructorType == null) {
 			throw new SobjectTableException('Constructor ' + constructorName + ' not found.');
 		}
-		return ((SobjectTableServiceAbstract.IConstructable)constructorType.newInstance()).construct(inputDataJSON);
+		return ((SobjectTableService.IConstructable)constructorType.newInstance()).construct(inputDataJSON);
 	}
 
 	/* PUBLIC METHODS */
@@ -21,7 +21,7 @@ public with sharing class SobjectTableCtrl {
 	@AuraEnabled
 	public static Map<String, Object> init(String controllerName, String inputDataJSON){
 		try {
-			SobjectTableServiceAbstract sobjectTableService = controllerInstance(controllerName, inputDataJSON);
+			SobjectTableService sobjectTableService = controllerInstance(controllerName, inputDataJSON);
 			return new Map<String, Object>{
 				'records'             => sobjectTableService.tableRows(),
 				'recordsCount'        => sobjectTableService.recordsCount(),

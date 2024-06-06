@@ -1,7 +1,7 @@
 /**
  * @author Andrei Kakhanouski <akohan91@gmail.com>
  */
-public abstract class SobjectTableServiceAbstract {
+public abstract class SobjectTableService {
 	@TestVisible protected String sobjectName;
 	@TestVisible protected List<String> selectFields;
 	@TestVisible protected DynamicSOQLConditionBlock conditionBlock;
@@ -10,13 +10,13 @@ public abstract class SobjectTableServiceAbstract {
 	@TestVisible protected Integer offsetRecords;
 	
 	/**
-	 * @description The IConstructable interface allows to enable reflection for the SobjectTableServiceAbstract
+	 * @description The IConstructable interface allows to enable reflection for the SobjectTableService
 	 * and prevents using static methods for service instantiation.
-	 * @param  inputJSON inputJSON the JSON string which represents the SobjectTableServiceAbstract
-	 * @return           {SobjectTableServiceAbstract}
+	 * @param  inputJSON inputJSON the JSON string which represents the SobjectTableService
+	 * @return           {SobjectTableService}
 	 */
 	public interface IConstructable {
-		SobjectTableServiceAbstract construct(String inputJSON);
+		SobjectTableService construct(String inputJSON);
 	}
 
 	/**

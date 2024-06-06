@@ -71,7 +71,7 @@ public with sharing class TestSobjectTableCtrl {
 		Test.startTest();
 		Integer errorCount = 0;
 		try {
-			SobjectTableServiceAbstract sobjectTableServiceInstance = getSobjectTableServiceInstance();
+			SobjectTableService sobjectTableServiceInstance = getSobjectTableServiceInstance();
 			sobjectTableServiceInstance.selectFields.add('WrongField');
 			Map<String, Object> result = SobjectTableCtrl.init(
 				'default',
@@ -87,8 +87,8 @@ public with sharing class TestSobjectTableCtrl {
 		Test.stopTest();
 	}
 
-	private static SobjectTableServiceAbstract getSobjectTableServiceInstance() {
-		SobjectTableServiceAbstract instance = new SobjectTableServiceDefault();
+	private static SobjectTableService getSobjectTableServiceInstance() {
+		SobjectTableService instance = new SobjectTableServiceDefault();
 		instance.sobjectName = 'Contact';
 		instance.selectFields = new List<String>{'Name', 'Account.BillingAddress', 'Account.Type'};
 		instance.conditionBlock = new DynamicSOQLConditionBlock('AND')

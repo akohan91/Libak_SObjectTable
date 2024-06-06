@@ -2,7 +2,7 @@
  * @author Andrei Kakhanouski <akohan91@gmail.com>
  * The class is used as a service for the SobjectTableCtrl class.
  *
- * Properties of SobjectTableServiceAbstract class:
+ * Properties of SobjectTableService class:
  * @property sobjectName    { String }
  * @property selectFields   { List<String> }
  * @property conditionBlock { DynamicSOQLConditionBlock }
@@ -11,7 +11,7 @@
  * @property offsetRecords  { Integer }
  *
  */
-public with sharing class SobjectTableServiceDefault extends SobjectTableServiceAbstract {
+public with sharing class SobjectTableServiceDefault extends SobjectTableService {
 	private static final Map<Schema.DisplayType, String> DISPLAY_TYPE_TO_DATATABLE_TYPE_MAP = new Map<Schema.DisplayType, String>{
 		Schema.DisplayType.id =>            'text',
 		Schema.DisplayType.address =>       'text',
@@ -42,9 +42,9 @@ public with sharing class SobjectTableServiceDefault extends SobjectTableService
 	private List<DataTableColumn> dataTableColumns;
 	private Map<String, SobjectFieldPathInterface> targetFieldPathItemByPath;
 
-	public class Constructor implements SobjectTableServiceAbstract.IConstructable {
-		public SobjectTableServiceAbstract construct(String inputJSON) {
-			return (SobjectTableServiceAbstract)JSON.deserialize(inputJSON, SobjectTableServiceDefault.class);
+	public class Constructor implements SobjectTableService.IConstructable {
+		public SobjectTableService construct(String inputJSON) {
+			return (SobjectTableService)JSON.deserialize(inputJSON, SobjectTableServiceDefault.class);
 		}
 	}
 

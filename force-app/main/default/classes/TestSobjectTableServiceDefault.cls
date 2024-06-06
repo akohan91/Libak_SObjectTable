@@ -25,7 +25,7 @@ public with sharing class TestSobjectTableServiceDefault {
 	@IsTest
 	static void testSobjectRecords(){
 		Test.startTest();
-		SobjectTableServiceAbstract instance = getInstance();
+		SobjectTableService instance = getInstance();
 		List<Contact> result = (List<Contact>)instance.sobjectRecords();
 		System.assertEquals(
 			10, result.size(),
@@ -37,7 +37,7 @@ public with sharing class TestSobjectTableServiceDefault {
 	@IsTest
 	static void testRecordsCount(){
 		Test.startTest();
-		SobjectTableServiceAbstract instance = getInstance();
+		SobjectTableService instance = getInstance();
 		Integer result = instance.recordsCount();
 		System.assertEquals(
 			15, result,
@@ -49,7 +49,7 @@ public with sharing class TestSobjectTableServiceDefault {
 	@IsTest
 	static void testAddressFieldPaths(){
 		Test.startTest();
-		SobjectTableServiceAbstract instance = getInstance();
+		SobjectTableService instance = getInstance();
 		List<String> result = instance.addressFieldPaths();
 		System.assertEquals(
 			1, result.size(),
@@ -65,7 +65,7 @@ public with sharing class TestSobjectTableServiceDefault {
 	@IsTest
 	static void testReferenceFieldPaths(){
 		Test.startTest();
-		SobjectTableServiceAbstract instance = getInstance();
+		SobjectTableService instance = getInstance();
 		List<String> result = instance.referenceFieldPaths();
 		System.assertEquals(
 			1, result.size(),
@@ -81,7 +81,7 @@ public with sharing class TestSobjectTableServiceDefault {
 	@IsTest
 	static void testDataTableColumns(){
 		Test.startTest();
-		SobjectTableServiceAbstract instance = getInstance();
+		SobjectTableService instance = getInstance();
 		List<Object> result = instance.dataTableColumns();
 		System.assertEquals(
 			3, result.size(),
@@ -90,8 +90,8 @@ public with sharing class TestSobjectTableServiceDefault {
 		Test.stopTest();
 	}
 
-	private static SobjectTableServiceAbstract getInstance() {
-		SobjectTableServiceAbstract instance = new SobjectTableServiceDefault();
+	private static SobjectTableService getInstance() {
+		SobjectTableService instance = new SobjectTableServiceDefault();
 		instance.sobjectName = 'Contact';
 		instance.selectFields = new List<String>{'Name', 'Account.BillingAddress', 'Account.Type'};
 		instance.conditionBlock = new DynamicSOQLConditionBlock('AND')
