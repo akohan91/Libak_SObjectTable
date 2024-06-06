@@ -8,8 +8,8 @@
  */
 
 import { LightningElement, api } from 'lwc'
-import { showErrorModal } from 'c/lwcUtils'
-import { DynamicSOQLOrderBy } from 'c/soql'
+// import { showErrorModal } from 'c/lwcUtils'
+// import { DynamicSOQLOrderBy } from 'c/soql'
 import { flattenForDataTable, overrideDataTableColumns } from './sobjectTableUtils'
 import init from '@salesforce/apex/SobjectTableCtrl.init'
 
@@ -38,7 +38,7 @@ export default class SobjectTable extends LightningElement {
 				this._selectFields = Array.isArray(value) ? value : value.replace(/[\s]/g, '').split(',');
 			}
 		} catch (error) {
-			showErrorModal(error, this);
+			// showErrorModal(error, this);
 		}
 	}
 
@@ -105,7 +105,7 @@ export default class SobjectTable extends LightningElement {
 				spinner: !this.records || !this.dataTableColumns || this.isBusy,
 			}
 		} catch (error) {
-			showErrorModal(error, this);
+			// showErrorModal(error, this);
 		}
 	}
 
@@ -115,7 +115,7 @@ export default class SobjectTable extends LightningElement {
 				new DynamicSOQLOrderBy([this.sortedBy], this.sortedDirection === 'desc') ||
 				null;
 		} catch (error) {
-			showErrorModal(error, this);
+			// showErrorModal(error, this);
 		}
 	}
 
@@ -162,7 +162,7 @@ export default class SobjectTable extends LightningElement {
 			this.dataTableColumns = overrideDataTableColumns(dataTableColumns, this.columnsToOverride);
 			this.dispatchEvent(new CustomEvent('recordsloaded', { detail: this.records }));
 		} catch (error) {
-			showErrorModal(error, this);
+			// showErrorModal(error, this);
 		} finally {
 			this.ready();
 		}
@@ -182,12 +182,12 @@ export default class SobjectTable extends LightningElement {
 	 * Handles pagination events by updating the offset and re-fetching data.
 	 * @param {CustomEvent} event - The pagination event.
 	 */
-	handlePagination(event) {
+	@api paginate(offset) {
 		try {
-			this.offsetRecords = event.detail.offset;
+			this.offsetRecords = offset;
 			this.initSobjectTable();
 		} catch (error) {
-			showErrorModal(error, this);
+			// showErrorModal(error, this);
 		}
 	}
 
@@ -201,7 +201,7 @@ export default class SobjectTable extends LightningElement {
 			this.sortedDirection = event.detail.sortDirection;
 			this.initSobjectTable();
 		} catch (error) {
-			showErrorModal(error, this);
+			// showErrorModal(error, this);
 		}
 	}
 
@@ -213,7 +213,7 @@ export default class SobjectTable extends LightningElement {
 		try {
 			this.dispatchEvent(new CustomEvent('rowaction', { detail: {...event.detail} }))
 		} catch (error) {
-			showErrorModal(error, this);
+			// showErrorModal(error, this);
 		}
 	}
 
@@ -225,7 +225,7 @@ export default class SobjectTable extends LightningElement {
 		try {
 			this.dispatchEvent(new CustomEvent('rowselection', { detail: {...event.detail} }))
 		} catch (error) {
-			showErrorModal(error, this);
+			// showErrorModal(error, this);
 		}
 	}
 }

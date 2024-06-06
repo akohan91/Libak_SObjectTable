@@ -1,6 +1,6 @@
 <!-- @author Andrei Kakhanouski <akohan91@gmail.com> -->
 <template>
-	<c-lwc-error-modal></c-lwc-error-modal>
+	<!-- <c-lwc-error-modal></c-lwc-error-modal> -->
 
 	<div class="slds-is-relative sobject-table">
 		<lightning-spinner if:true={show.spinner} variant="brand"></lightning-spinner>
@@ -17,11 +17,11 @@
 				onrowaction={handleRowAction}
 				onrowselection={handleRowSelection}
 			></lightning-datatable>
-			<c-lwc-pagination
+			<!-- <c-lwc-pagination
 				page-size={limitRecords}
 				list-size={recordsCount}
 				onpagination={handlePagination}
-			></c-lwc-pagination>
+			></c-lwc-pagination> -->
 		</div>
 	</div>
 </template>

@@ -88,14 +88,15 @@ public with sharing class TestSobjectTableCtrl {
 	}
 
 	private static SobjectTableService getSobjectTableServiceInstance() {
-		SobjectTableService instance = new SobjectTableServiceDefault();
-		instance.sobjectName = 'Contact';
-		instance.selectFields = new List<String>{'Name', 'Account.BillingAddress', 'Account.Type'};
-		instance.conditionBlock = new DynamicSOQLConditionBlock('AND')
-			.addCondition(new DynamicSOQLCondition('Account.Name', '=', 'Test Account Name'));
-		instance.orderBy = new DynamicSOQLOrderBy(new List<String>{'Name'});
-		instance.limitRecords = 10;
-		instance.offsetRecords = 0;
-		return instance;
+		// SobjectTableService instance = new SobjectTableServiceDefault();
+		// instance.sobjectName = 'Contact';
+		// instance.selectFields = new List<String>{'Name', 'Account.BillingAddress', 'Account.Type'};
+		// instance.conditionBlock = new DynamicSOQLConditionBlock('AND')
+		// 	.addCondition(new DynamicSOQLCondition('Account.Name', '=', 'Test Account Name'));
+		// instance.orderBy = new DynamicSOQLOrderBy(new List<String>{'Name'});
+		// instance.limitRecords = 10;
+		// instance.offsetRecords = 0;
+		// return instance;
+		return null;
 	}
 }

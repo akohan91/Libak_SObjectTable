@@ -4,8 +4,8 @@
 public abstract class SobjectTableService {
 	@TestVisible protected String sobjectName;
 	@TestVisible protected List<String> selectFields;
-	@TestVisible protected DynamicSOQLConditionBlock conditionBlock;
-	@TestVisible protected DynamicSOQLOrderBy orderBy;
+	@TestVisible protected ConditionBlock conditionBlock;
+	@TestVisible protected OrderBy orderBy;
 	@TestVisible protected Integer limitRecords;
 	@TestVisible protected Integer offsetRecords;
 	
@@ -58,4 +58,31 @@ public abstract class SobjectTableService {
 	 * @return   { List<Object> }
 	 */
 	abstract public List<Object> dataTableColumns();
+
+
+	public class ConditionBlock {
+		public List<ConditionBlock> blocks;
+		public List<Condition> conditions;
+		public String operator;
+	}
+
+	public class Condition {
+		public SOQLFunction function;
+		public String fieldName;
+		public String operator;
+		public String value;
+		public List<String> values;
+	}
+
+	public class OrderBy {
+		public List<String> orderByFields;
+		public Boolean isDESC;
+		public Boolean isNullsFirst;
+	}
+
+	public class SOQLFunction {
+		public String functionName;
+		public String fieldName;
+		public String alias;
+	}
 }
