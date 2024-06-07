@@ -15,7 +15,8 @@ public with sharing class SobjectTableCtrl {
 		if (constructorType == null) {
 			throw new SobjectTableException('Constructor ' + constructorName + ' not found.');
 		}
-		return ((SobjectTableService.IConstructable)constructorType.newInstance()).construct(inputDataJSON);
+		return ((SobjectTableService.IConstructable)constructorType.newInstance())
+			.construct(inputDataJSON, null, null);
 	}
 
 	/* PUBLIC METHODS */
