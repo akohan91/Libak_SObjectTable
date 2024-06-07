@@ -1,4 +1,14 @@
+/**
+ * @author Andrei Kakhanouski <akohan91@gmail.com>
+ * 
+ * Factory class for creating instances of {@link SObjectTableColumn} based on field metadata.
+ * This factory maps field types to corresponding column types and generates appropriate columns.
+ */
 public virtual class SObjectTableColumnFactory {
+
+	/**
+	 * Maps display types to factory types for building columns.
+	 */
 	public static final Map<Schema.DisplayType, Type> DISPLAY_TYPE_TO_FACTORY_TYPE = new Map<Schema.DisplayType, Type>{
 		Schema.DisplayType.ID =>            Reference.class,
 		Schema.DisplayType.REFERENCE =>     Reference.class,
@@ -23,6 +33,9 @@ public virtual class SObjectTableColumnFactory {
 		Schema.DisplayType.URL =>           SObjectTableColumnFactory.class
 	};
 	
+	/**
+	 * Maps display types to data table types for building columns.
+	 */
 	private final Map<Schema.DisplayType, String> DISPLAY_TYPE_TO_DATATABLE_TYPE_MAP = new Map<Schema.DisplayType, String>{
 		Schema.DisplayType.ID =>            'text',
 		Schema.DisplayType.REFERENCE =>     'text',
@@ -47,6 +60,12 @@ public virtual class SObjectTableColumnFactory {
 		Schema.DisplayType.URL =>           'url'
 	};
 
+	/**
+	 * Builds an instance of {@link SObjectTableColumn} based on the provided field path metadata.
+	 * 
+	 * @param fieldPath the field path metadata
+	 * @return a new instance of {@link SObjectTableColumn} built from the provided metadata
+	 */
 	virtual public SObjectTableColumn build(ISObjectTableFieldPath fieldPath) {
 		return new SObjectTableColumn(
 			fieldPath.path(),
@@ -56,19 +75,35 @@ public virtual class SObjectTableColumnFactory {
 		.withSortable(fieldPath.targetFieldDescribe().isSortable());
 	}
 
+	/**
+	 * Returns the data table type corresponding to the given display type.
+	 * 
+	 * @param type the display type
+	 * @return the data table type for the given display type
+	 */
 	virtual protected String dataTableTypeFromDisplayType(Schema.DisplayType type) {
 		return DISPLAY_TYPE_TO_DATATABLE_TYPE_MAP.containsKey(type) ?
 			DISPLAY_TYPE_TO_DATATABLE_TYPE_MAP.get(type) :
 			'text';
 	}
 	
+	/**
+	 * Factory class for creating instances of {@link SObjectTableColumn} specifically for reference fields.
+	 */
 	public class Reference extends SObjectTableColumnFactory {
+
+		/**
+		 * Builds an instance of {@link SObjectTableColumn} for a reference field.
+		 * 
+		 * @param fieldPath the field path metadata
+		 * @return a new instance of {@link SObjectTableColumn} for a reference field
+		 */
 		override public SObjectTableColumn build(ISObjectTableFieldPath fieldPath) {
 			return new SObjectTableColumn(
 				fieldPath.targetReferencePath() + '_link',
 				fieldPath.targetFieldDescribe().getLabel(),
 				this.dataTableTypeFromDisplayType(Schema.DisplayType.URL)
-			).withtypeAttributes(new Map<String, Object>{
+			).withTypeAttributes(new Map<String, Object>{
 				'label' => new Map<String, Object>{'fieldName' => fieldPath.path()},
 				'tooltip' => new Map<String, Object>{'fieldName' => fieldPath.path()}
 			}).withColumnKey(fieldPath.path())

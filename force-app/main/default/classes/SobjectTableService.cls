@@ -10,7 +10,7 @@ public abstract class SobjectTableService {
 	@TestVisible protected Integer offsetRecords;
 
 	protected ISObjectTableFieldPathConstructor fieldPathConstructor;
-	protected ISObjectTableSOQLConstractable soqlConstructor;
+	protected ISObjectTableSOQLConstructable soqlConstructor;
 	
 	protected Set<String> fieldPathsToRetrieve;
 	protected List<SOQLFunction> retriveFunctions;
@@ -28,7 +28,7 @@ public abstract class SobjectTableService {
 		SobjectTableService construct(
 			String inputJSON,
 			ISObjectTableFieldPathConstructor fieldPathConstructor,
-			ISObjectTableSOQLConstractable soqlConstructor
+			ISObjectTableSOQLConstructable soqlConstructor
 		);
 	}
 
