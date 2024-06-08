@@ -9,8 +9,22 @@ public abstract class SobjectTableService {
 	@TestVisible protected Integer limitRecords;
 	@TestVisible protected Integer offsetRecords;
 
-	protected ISObjectTableFieldPathConstructor fieldPathConstructor;
-	protected ISObjectTableSOQLConstructable soqlConstructor;
+	protected ISObjectTableFieldPathConstructable fieldPathConstructor {
+		get {
+			if (this.fieldPathConstructor == null) {
+				this.fieldPathConstructor = this.sObjectTableFieldPathConstructor();
+			}
+			return this.fieldPathConstructor;
+		} private set;
+	}
+	protected ISObjectTableSOQLConstructable soqlConstructor {
+		get {
+			if (this.soqlConstructor == null) {
+				this.soqlConstructor = this.sObjectTableSOQLConstructor();
+			}
+			return this.soqlConstructor;
+		} private set;
+	}
 	
 	protected Set<String> fieldPathsToRetrieve;
 	protected List<SOQLFunction> retriveFunctions;
@@ -25,12 +39,25 @@ public abstract class SobjectTableService {
 	 * @return           {SobjectTableService}
 	 */
 	public interface IConstructable {
-		SobjectTableService construct(
-			String inputJSON,
-			ISObjectTableFieldPathConstructor fieldPathConstructor,
-			ISObjectTableSOQLConstructable soqlConstructor
-		);
+		SobjectTableService construct(String inputJSON);
 	}
+
+	/**
+	 * Abstract method for providing an instance of {@link ISObjectTableSOQLConstructable}.
+	 * Subclasses must implement this method to provide a concrete implementation.
+	 * 
+	 * @return an instance of {@link ISObjectTableSOQLConstructable}
+	 */
+	abstract protected ISObjectTableSOQLConstructable sObjectTableSOQLConstructor();
+
+	/**
+	 * Abstract method for providing an instance of {@link ISObjectTableFieldPathConstructor}.
+	 * Subclasses must implement this method to provide a concrete implementation.
+	 * 
+	 * @return an instance of {@link ISObjectTableFieldPathConstructor}
+	 */
+	abstract protected ISObjectTableFieldPathConstructable sObjectTableFieldPathConstructor();
+
 
 	/**
 	 * @description The method allows overriding the table data after it's been selected.

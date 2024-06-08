@@ -89,7 +89,7 @@ export default class SobjectTable extends LightningElement {
 	 * The selected rows in the table.
 	 * @type {Object[]}
 	 */
-	@api selectedRows;
+	@api selectedRows = [];
 
 	_selectFields;
 	recordsCount = 0;

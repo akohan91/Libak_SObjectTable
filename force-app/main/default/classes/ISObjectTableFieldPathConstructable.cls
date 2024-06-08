@@ -10,7 +10,7 @@
  * - Simple field path: "Name"
  * - Relationship field path: "Account.Owner.Name"
  */
-public interface ISObjectTableFieldPathConstructor {
+public interface ISObjectTableFieldPathConstructable {
 
 	/**
 	 * Constructs an ISObjectTableFieldPath instance.
