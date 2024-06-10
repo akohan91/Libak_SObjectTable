@@ -68,10 +68,10 @@ public virtual class SObjectTableColumnFactory {
 	 */
 	virtual public SObjectTableColumn build(ISObjectTableFieldPath fieldPath) {
 		return new SObjectTableColumn(
-			fieldPath.path(),
+			fieldPath.path().toLowerCase(),
 			fieldPath.targetFieldDescribe().getLabel(),
 			this.dataTableTypeFromDisplayType(fieldPath.targetFieldDescribe().getType())
-		).withColumnKey(fieldPath.path())
+		).withColumnKey(fieldPath.path().toLowerCase())
 		.withSortable(fieldPath.targetFieldDescribe().isSortable());
 	}
 
@@ -100,13 +100,13 @@ public virtual class SObjectTableColumnFactory {
 		 */
 		override public SObjectTableColumn build(ISObjectTableFieldPath fieldPath) {
 			return new SObjectTableColumn(
-				fieldPath.targetReferencePath() + '_link',
+				fieldPath.targetReferencePath().toLowerCase() + '_link',
 				fieldPath.targetFieldDescribe().getLabel(),
 				this.dataTableTypeFromDisplayType(Schema.DisplayType.URL)
 			).withTypeAttributes(new Map<String, Object>{
-				'label' => new Map<String, Object>{'fieldName' => fieldPath.path()},
-				'tooltip' => new Map<String, Object>{'fieldName' => fieldPath.path()}
-			}).withColumnKey(fieldPath.path())
+				'label' => new Map<String, Object>{'fieldName' => fieldPath.path().toLowerCase()},
+				'tooltip' => new Map<String, Object>{'fieldName' => fieldPath.path().toLowerCase()}
+			}).withColumnKey(fieldPath.path().toLowerCase())
 			.withSortable(fieldPath.targetFieldDescribe().isSortable());
 		}
 	}

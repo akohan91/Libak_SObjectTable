@@ -152,20 +152,20 @@ public abstract class SobjectTableService {
 		for (String fieldPathStr : this.selectFields) {
 			fieldPathStr = fieldPathStr.toLowerCase();
 			ISObjectTableFieldPath fieldPath = this.fieldPathConstructor.construct(this.sObjectName, fieldPathStr);
-			this.targetFieldPathItemByPath.put(fieldPath.path(), fieldPath);
+			this.targetFieldPathItemByPath.put(fieldPath.path().toLowerCase(), fieldPath);
 
-			this.fieldPathsToRetrieve.add(fieldPath.path());
+			this.fieldPathsToRetrieve.add(fieldPath.path().toLowerCase());
 			if (fieldPath.targetFieldDescribe().getType() == Schema.DisplayType.ID ||
 				fieldPath.targetFieldDescribe().getType() == Schema.DisplayType.REFERENCE ||
 				fieldPath.targetFieldDescribe().isNameField()
 			) {
-				this.fieldPathsToRetrieve.add(fieldPath.targetReferencePath());
-				this.referenceFieldPaths.add(fieldPath.targetReferencePath());
+				this.fieldPathsToRetrieve.add(fieldPath.targetReferencePath().toLowerCase());
+				this.referenceFieldPaths.add(fieldPath.targetReferencePath().toLowerCase());
 			} else if (fieldPath.targetFieldDescribe().getType() == Schema.DisplayType.PICKLIST) {
-				this.fieldPathsToRetrieve.remove(fieldPath.path());
-				this.retriveFunctions.add(new SOQLFunction('toLabel', fieldPath.path()));
+				this.fieldPathsToRetrieve.remove(fieldPath.path().toLowerCase());
+				this.retriveFunctions.add(new SOQLFunction('toLabel', fieldPath.path().toLowerCase()));
 			} else if (fieldPath.targetFieldDescribe().getType() == Schema.DisplayType.ADDRESS) {
-				this.addressFieldPaths.add(fieldPath.path());
+				this.addressFieldPaths.add(fieldPath.path().toLowerCase());
 			}
 		}
 	}
@@ -206,4 +206,6 @@ public abstract class SobjectTableService {
 			this.fieldName = fieldName;
 		}
 	}
+
+	public class SobjectTableServiceException extends Exception {}
 }

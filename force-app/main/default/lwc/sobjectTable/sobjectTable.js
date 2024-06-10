@@ -39,6 +39,7 @@ export default class SobjectTable extends LightningElement {
 			}
 		} catch (error) {
 			// showErrorModal(error, this);
+			console.error(error);
 		}
 	}
 
@@ -106,6 +107,7 @@ export default class SobjectTable extends LightningElement {
 			}
 		} catch (error) {
 			// showErrorModal(error, this);
+			console.error(error);
 		}
 	}
 
@@ -116,6 +118,7 @@ export default class SobjectTable extends LightningElement {
 				null;
 		} catch (error) {
 			// showErrorModal(error, this);
+			console.error(error);
 		}
 	}
 
@@ -163,6 +166,7 @@ export default class SobjectTable extends LightningElement {
 			this.dispatchEvent(new CustomEvent('recordsloaded', { detail: this.records }));
 		} catch (error) {
 			// showErrorModal(error, this);
+			console.error(error);
 		} finally {
 			this.ready();
 		}
@@ -188,6 +192,7 @@ export default class SobjectTable extends LightningElement {
 			this.initSobjectTable();
 		} catch (error) {
 			// showErrorModal(error, this);
+			console.error(error);
 		}
 	}
 
@@ -202,6 +207,7 @@ export default class SobjectTable extends LightningElement {
 			this.initSobjectTable();
 		} catch (error) {
 			// showErrorModal(error, this);
+			console.error(error);
 		}
 	}
 
@@ -214,6 +220,7 @@ export default class SobjectTable extends LightningElement {
 			this.dispatchEvent(new CustomEvent('rowaction', { detail: {...event.detail} }))
 		} catch (error) {
 			// showErrorModal(error, this);
+			console.error(error);
 		}
 	}
 
@@ -226,6 +233,7 @@ export default class SobjectTable extends LightningElement {
 			this.dispatchEvent(new CustomEvent('rowselection', { detail: {...event.detail} }))
 		} catch (error) {
 			// showErrorModal(error, this);
+			console.error(error);
 		}
 	}
 }
