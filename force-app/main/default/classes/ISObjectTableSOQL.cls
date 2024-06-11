@@ -2,15 +2,29 @@
  * @author Andrei Kakhanouski <akohan91@gmail.com>
  * 
  * Interface for building SOQL (Salesforce Object Query Language) queries for SObject tables.
- * Allows adding fields, functions, conditions, ordering, limits, and offsets to the query.
- * Supports generating a string representation of the constructed query.
+ * This interface allows adding fields, functions, conditions, ordering, limits, and offsets to the query.
+ * It supports generating a string representation of the constructed query.
+ * 
+ * Example usage:
+ * 
+ * ISObjectTableSOQL query = ...;
+ * query.withField("Name")
+ *      .withConditions(new SobjectTableService.ConditionBlock(...))
+ *      .withOrderBy(new SobjectTableService.OrderBy(...))
+ *      .withLimit(10)
+ *      .withOffset(5);
+ * String soqlQuery = query.stringify();
+ * 
+ * @see SobjectTableService.SOQLFunction
+ * @see SobjectTableService.ConditionBlock
+ * @see SobjectTableService.OrderBy
  */
 public interface ISObjectTableSOQL {
 
 	/**
 	 * Adds a field to the SELECT clause of the SOQL query.
 	 *
-	 * @param fieldPath the path of the field to be added.
+	 * @param fieldPath the path of the field to be added. For example, "Account.Name".
 	 * @return an ISObjectTableSOQL instance with the added field.
 	 */
 	ISObjectTableSOQL withField(String fieldPath);
@@ -57,6 +71,8 @@ public interface ISObjectTableSOQL {
 
 	/**
 	 * Generates a string representation of the constructed SOQL query.
+	 * The returned string should represent the complete SOQL query based on the fields,
+	 * functions, conditions, ordering, limit, and offset specified.
 	 *
 	 * @return the string representation of the SOQL query.
 	 */

@@ -48,7 +48,7 @@ public with sharing class SobjectTableCtrl {
 				'dataTableColumns'    => sobjectTableService.dataTableColumns()
 			};
 		} catch (Exception exc) {
-			throw new SobjectTableException(exc.getMessage());
+			throw new SobjectTableException('Error initializing SObject Table: ' + exc.getMessage());
 		}
 	}
 

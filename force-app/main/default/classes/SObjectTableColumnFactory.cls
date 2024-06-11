@@ -3,6 +3,12 @@
  * 
  * Factory class for creating instances of {@link SObjectTableColumn} based on field metadata.
  * This factory maps field types to corresponding column types and generates appropriate columns.
+ * 
+ * Example usage:
+ * 
+ * ISObjectTableFieldPath fieldPath = ...;
+ * SObjectTableColumnFactory factory = new SObjectTableColumnFactory();
+ * SObjectTableColumn column = factory.build(fieldPath);
  */
 public virtual class SObjectTableColumnFactory {
 
