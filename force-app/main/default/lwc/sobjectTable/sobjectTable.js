@@ -8,10 +8,17 @@
  */
 
 import { LightningElement, api } from 'lwc'
-// import { showErrorModal } from 'c/lwcUtils'
-// import { DynamicSOQLOrderBy } from 'c/soql'
 import { flattenForDataTable, overrideDataTableColumns } from './sobjectTableUtils'
+import { Condition } from './condition';
+import { ConditionBlock } from './conditionBlock'
+import { OrderBy } from './orderBy'
 import init from '@salesforce/apex/SobjectTableCtrl.init'
+
+export {
+	Condition,
+	ConditionBlock,
+	OrderBy,
+}
 
 export default class SobjectTable extends LightningElement {
 	/**
@@ -38,14 +45,13 @@ export default class SobjectTable extends LightningElement {
 				this._selectFields = Array.isArray(value) ? value : value.replace(/[\s]/g, '').split(',');
 			}
 		} catch (error) {
-			// showErrorModal(error, this);
-			console.error(error);
+			this.sendErrorEvent(error);
 		}
 	}
 
 	/**
 	 * The SOQL condition block to filter records.
-	 * @type {DynamicSOQLConditionBlock}
+	 * @type {ConditionBlock}
 	 */
 	@api conditionBlock = null;
 
@@ -103,22 +109,20 @@ export default class SobjectTable extends LightningElement {
 		try {
 			return {
 				content: this.records && this.dataTableColumns,
-				spinner: !this.records || !this.dataTableColumns || this.isBusy,
+				spinner: this.isBusy,
 			}
 		} catch (error) {
-			// showErrorModal(error, this);
-			console.error(error);
+			this.sendErrorEvent(error);
 		}
 	}
 
 	get orderBy() {
 		try {
-			return this.sortedBy &&
-				new DynamicSOQLOrderBy([this.sortedBy], this.sortedDirection === 'desc') ||
+			return this.sortedBy && 
+				new OrderBy([this.sortedBy], this.sortedDirection === 'desc') || 
 				null;
 		} catch (error) {
-			// showErrorModal(error, this);
-			console.error(error);
+			this.sendErrorEvent(error);
 		}
 	}
 
@@ -127,6 +131,22 @@ export default class SobjectTable extends LightningElement {
 	 */
 	@api refresh() {
 		this.initSobjectTable();
+	}
+
+	/**
+	 * Paginates the data by setting the offset and limit.
+	 * 
+	 * @param {number} offset The offset for fetching records.
+	 * @param {number} limit The maximum number of records to fetch.
+	 */
+	@api paginate(offset, limit) {
+		try {
+			this.offsetRecords = offset;
+			this.limitRecords = limit;
+			this.initSobjectTable();
+		} catch (error) {
+			this.sendErrorEvent(error);
+		}
 	}
 
 	/**
@@ -163,10 +183,9 @@ export default class SobjectTable extends LightningElement {
 			this.records = records.map(record => flattenForDataTable(record, addressFieldPaths, referenceFieldPaths));
 			this.recordsCount = recordsCount;
 			this.dataTableColumns = overrideDataTableColumns(dataTableColumns, this.columnsToOverride);
-			this.dispatchEvent(new CustomEvent('recordsloaded', { detail: this.records }));
+			this.sendLoadedEvent(this.records, this.recordsCount);
 		} catch (error) {
-			// showErrorModal(error, this);
-			console.error(error);
+			this.sendErrorEvent(error);
 		} finally {
 			this.ready();
 		}
@@ -183,20 +202,6 @@ export default class SobjectTable extends LightningElement {
 	ready = () => (this.isBusy = false);
 
 	/**
-	 * Handles pagination events by updating the offset and re-fetching data.
-	 * @param {CustomEvent} event - The pagination event.
-	 */
-	@api paginate(offset) {
-		try {
-			this.offsetRecords = offset;
-			this.initSobjectTable();
-		} catch (error) {
-			// showErrorModal(error, this);
-			console.error(error);
-		}
-	}
-
-	/**
 	 * Handles sorting events by updating the sortedBy and sortedDirection properties and re-fetching data.
 	 * @param {CustomEvent} event - The sort event.
 	 */
@@ -206,34 +211,52 @@ export default class SobjectTable extends LightningElement {
 			this.sortedDirection = event.detail.sortDirection;
 			this.initSobjectTable();
 		} catch (error) {
-			// showErrorModal(error, this);
-			console.error(error);
+			this.sendErrorEvent(error);
 		}
 	}
 
 	/**
-	 * Handles row action events by dispatching a custom rowaction event.
+	 * Dispatches a custom event indicating that data has been loaded.
+	 * 
+	 * @param {Array} records An array containing the loaded records.
+	 * @param {number} recordsCount The total count of records.
+	 */
+	sendLoadedEvent(records, recordsCount) {
+		const event = new CustomEvent('load', { detail: { records, recordsCount } });
+		this.dispatchEvent(event);
+	}
+
+
+	/**
+	 * Dispatches row action events by dispatching a custom rowaction event.
 	 * @param {CustomEvent} event - The row action event.
 	 */
-	handleRowAction(event) {
+	sendRowActionEvent(event) {
 		try {
 			this.dispatchEvent(new CustomEvent('rowaction', { detail: {...event.detail} }))
 		} catch (error) {
-			// showErrorModal(error, this);
-			console.error(error);
+			this.sendErrorEvent(error);
 		}
 	}
 
 	/**
-	 * Handles row selection events by dispatching a custom rowselection event.
+	 * Dispatches row selection events by dispatching a custom rowselection event.
 	 * @param {CustomEvent} event - The row selection event.
 	 */
-	handleRowSelection(event) {
+	sendRowSelectionEvent(event) {
 		try {
 			this.dispatchEvent(new CustomEvent('rowselection', { detail: {...event.detail} }))
 		} catch (error) {
-			// showErrorModal(error, this);
-			console.error(error);
+			this.sendErrorEvent(error);
 		}
+	}
+
+	/**
+	 * Dispatches an error event with error details.
+	 * 
+	 * @param {Object} error The error object containing error details.
+	 */
+	sendErrorEvent(error) {
+		this.dispatchEvent(new CustomEvent('error', { detail: error }))
 	}
 }

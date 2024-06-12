@@ -1,7 +1,5 @@
 <!-- @author Andrei Kakhanouski <akohan91@gmail.com> -->
 <template>
-	<!-- <c-lwc-error-modal></c-lwc-error-modal> -->
-
 	<div class="slds-is-relative sobject-table">
 		<lightning-spinner if:true={show.spinner} variant="brand"></lightning-spinner>
 		<div if:true={show.content}>
@@ -14,14 +12,10 @@
 				sorted-by={sortedBy}
 				sorted-direction={sortedDirection}
 				onsort={handleSort}
-				onrowaction={handleRowAction}
-				onrowselection={handleRowSelection}
+				onrowaction={sendRowActionEvent}
+				onrowselection={sendRowSelectionEvent}
 			></lightning-datatable>
-			<!-- <c-lwc-pagination
-				page-size={limitRecords}
-				list-size={recordsCount}
-				onpagination={handlePagination}
-			></c-lwc-pagination> -->
+			<slot name="pagination"></slot>
 		</div>
 	</div>
 </template>
