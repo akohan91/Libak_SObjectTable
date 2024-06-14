@@ -122,11 +122,13 @@ public abstract class SobjectTableService {
 	 * @return   { List<SObjectTableColumn> }
 	 */
 	virtual public List<SObjectTableColumn> dataTableColumns() {
+		this.processFieldPaths();
 		List<SObjectTableColumn> dataTableColumns = new List<SObjectTableColumn>();
 		for (String fieldPathStr : this.inputData.selectFields) {
-			ISObjectTableFieldPath fieldPathItem = this.fieldPathConstructor.construct(this.inputData.sObjectName, fieldPathStr);
-			Schema.DisplayType fieldType = fieldPathItem.targetFieldDescribe().isNameField()
-				? Schema.DisplayType.REFERENCE
+			fieldPathStr = fieldPathStr.toLowerCase();
+			ISObjectTableFieldPath fieldPathItem = this.targetFieldPathItemByPath.get(fieldPathStr);
+			DisplayType fieldType = fieldPathItem.targetFieldDescribe().isNameField()
+				? DisplayType.REFERENCE
 				: fieldPathItem.targetFieldDescribe().getType();
 			SObjectTableColumnFactory columnFactory = (SObjectTableColumnFactory)SObjectTableColumnFactory.DISPLAY_TYPE_TO_FACTORY_TYPE
 				.get(fieldType)
@@ -154,16 +156,16 @@ public abstract class SobjectTableService {
 			this.targetFieldPathItemByPath.put(fieldPath.path().toLowerCase(), fieldPath);
 
 			this.fieldPathsToRetrieve.add(fieldPath.path().toLowerCase());
-			if (fieldPath.targetFieldDescribe().getType() == Schema.DisplayType.ID ||
-				fieldPath.targetFieldDescribe().getType() == Schema.DisplayType.REFERENCE ||
+			if (fieldPath.targetFieldDescribe().getType() == DisplayType.ID ||
+				fieldPath.targetFieldDescribe().getType() == DisplayType.REFERENCE ||
 				fieldPath.targetFieldDescribe().isNameField()
 			) {
 				this.fieldPathsToRetrieve.add(fieldPath.targetReferencePath().toLowerCase());
 				this.referenceFieldPaths.add(fieldPath.targetReferencePath().toLowerCase());
-			} else if (fieldPath.targetFieldDescribe().getType() == Schema.DisplayType.PICKLIST) {
+			} else if (fieldPath.targetFieldDescribe().getType() == DisplayType.PICKLIST) {
 				this.fieldPathsToRetrieve.remove(fieldPath.path().toLowerCase());
 				this.retriveFunctions.add(new SOQLFunction('toLabel', fieldPath.path().toLowerCase()));
-			} else if (fieldPath.targetFieldDescribe().getType() == Schema.DisplayType.ADDRESS) {
+			} else if (fieldPath.targetFieldDescribe().getType() == DisplayType.ADDRESS) {
 				this.addressFieldPaths.add(fieldPath.path().toLowerCase());
 			}
 		}
@@ -172,17 +174,17 @@ public abstract class SobjectTableService {
 
 	public class SObjectTableInputData {
 		@AuraEnabled
-		public String sobjectName;
+		public String sobjectName {get; set;}
 		@AuraEnabled
-		public List<String> selectFields;
+		public List<String> selectFields {get; set;}
 		@AuraEnabled
-		public ConditionBlock conditionBlock;
+		public ConditionBlock conditionBlock {get; set;}
 		@AuraEnabled
-		public OrderBy orderBy;
+		public OrderBy orderBy {get; set;}
 		@AuraEnabled
-		public Integer limitRecords;
+		public Integer limitRecords {get; set;}
 		@AuraEnabled
-		public Integer offsetRecords;
+		public Integer offsetRecords {get; set;}
 	}
 	
 	public class ConditionBlock {
