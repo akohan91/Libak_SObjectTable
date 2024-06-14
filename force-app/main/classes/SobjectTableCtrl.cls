@@ -14,7 +14,7 @@ public with sharing class SobjectTableCtrl {
 	 * @return the created SobjectTableService instance
 	 * @throws SobjectTableException if the service or constructor is not found
 	 */
-	private static SobjectTableService serviceInstance(String serviceName, String inputDataJSON) {
+	private static SobjectTableService serviceInstance(String serviceName, SobjectTableService.SObjectTableInputData inputData) {
 		if (serviceName == null) {
 			throw new SobjectTableException('SObject Table service ' + serviceName + ' not found.');
 		}
@@ -25,7 +25,7 @@ public with sharing class SobjectTableCtrl {
 			throw new SobjectTableException('Constructor ' + constructorName + ' not found.');
 		}
 		return ((SobjectTableService.IConstructable)constructorType.newInstance())
-			.construct(inputDataJSON);
+			.construct(inputData);
 	}
 
 	/**
@@ -37,9 +37,9 @@ public with sharing class SobjectTableCtrl {
 	 * @throws SobjectTableException if an error occurs during initialization
 	 */
 	@AuraEnabled
-	public static Map<String, Object> init(String serviceName, String inputDataJSON){
+	public static Map<String, Object> init(String serviceName, SobjectTableService.SObjectTableInputData inputData){
 		try {
-			SobjectTableService sobjectTableService = serviceInstance(serviceName, inputDataJSON);
+			SobjectTableService sobjectTableService = serviceInstance(serviceName, inputData);
 			return new Map<String, Object>{
 				'records'             => sobjectTableService.tableRows(),
 				'recordsCount'        => sobjectTableService.recordsCount(),
@@ -48,7 +48,9 @@ public with sharing class SobjectTableCtrl {
 				'dataTableColumns'    => sobjectTableService.dataTableColumns()
 			};
 		} catch (Exception exc) {
-			throw new SobjectTableException('Error initializing SObject Table: ' + exc.getMessage());
+			SobjectTableException customExc = new SobjectTableException(exc);
+			customExc.setMessage('Error initializing SObject Table: ' + exc.getMessage());
+			throw customExc;
 		}
 	}
 

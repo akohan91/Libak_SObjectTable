@@ -170,14 +170,14 @@ export default class SobjectTable extends LightningElement {
 				addressFieldPaths,
 			} = await init({
 				serviceName: this.serviceName,
-				inputDataJSON: JSON.stringify({
+				inputData: {
 					sobjectName:    this.sobjectName,
 					selectFields:   this.selectFields,
 					conditionBlock: this.conditionBlock,
 					orderBy:        this.orderBy,
 					offsetRecords:  this.offsetRecords,
 					limitRecords:   this.limitRecords,
-				})
+				}
 			});
 
 			this.records = records.map(record => flattenForDataTable(record, addressFieldPaths, referenceFieldPaths));

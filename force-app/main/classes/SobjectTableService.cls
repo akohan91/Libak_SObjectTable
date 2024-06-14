@@ -2,12 +2,7 @@
  * @author Andrei Kakhanouski <akohan91@gmail.com>
  */
 public abstract class SobjectTableService {
-	@TestVisible protected String sobjectName;
-	@TestVisible protected List<String> selectFields;
-	@TestVisible protected ConditionBlock conditionBlock;
-	@TestVisible protected OrderBy orderBy;
-	@TestVisible protected Integer limitRecords;
-	@TestVisible protected Integer offsetRecords;
+	protected SObjectTableInputData inputData;
 
 	protected ISObjectTableFieldPathConstructable fieldPathConstructor {
 		get {
@@ -31,7 +26,11 @@ public abstract class SobjectTableService {
 	protected List<String> addressFieldPaths;
 	protected List<String> referenceFieldPaths;
 	protected Map<String, ISObjectTableFieldPath> targetFieldPathItemByPath;
-	
+
+	public SobjectTableService(SObjectTableInputData inputData) {
+		this.inputData = inputData;
+	}
+
 	/**
 	 * @description The IConstructable interface allows to enable reflection for the SobjectTableService
 	 * and prevents using static methods for service instantiation.
@@ -39,7 +38,7 @@ public abstract class SobjectTableService {
 	 * @return           {SobjectTableService}
 	 */
 	public interface IConstructable {
-		SobjectTableService construct(String inputJSON);
+		SobjectTableService construct(SObjectTableInputData inputData);
 	}
 
 	/**
@@ -73,17 +72,17 @@ public abstract class SobjectTableService {
 	 */
 	virtual protected List<SObject> sobjectRecords() {
 		this.processFieldPaths();
-		ISObjectTableSOQL soql = this.soqlConstructor.construct(this.sobjectName);
+		ISObjectTableSOQL soql = this.soqlConstructor.construct(this.inputData.sobjectName);
 		for (String fieldPath : fieldPathsToRetrieve) {
 			soql.withField(fieldPath);
 		}
 		for (SOQLFunction function : retriveFunctions) {
 			soql.withFunction(function);
 		}
-		soql.withConditions(this.conditionBlock);
-		soql.withOrderBy(this.orderBy);
-		soql.withLimit(this.limitRecords);
-		soql.withOffset(this.offsetRecords);
+		soql.withConditions(this.inputData.conditionBlock);
+		soql.withOrderBy(this.inputData.orderBy);
+		soql.withLimit(this.inputData.limitRecords);
+		soql.withOffset(this.inputData.offsetRecords);
 		return Database.query(soql.stringify());
 	}
 
@@ -93,9 +92,9 @@ public abstract class SobjectTableService {
 	 */
 	virtual public Integer recordsCount() {
 		return Database.countQuery(
-			this.soqlConstructor.construct(this.sobjectName)
+			this.soqlConstructor.construct(this.inputData.sobjectName)
 			.withFunction(new SOQLFunction('COUNT'))
-			.withConditions(this.conditionBlock)
+			.withConditions(this.inputData.conditionBlock)
 			.stringify()
 		);
 	}
@@ -124,8 +123,8 @@ public abstract class SobjectTableService {
 	 */
 	virtual public List<SObjectTableColumn> dataTableColumns() {
 		List<SObjectTableColumn> dataTableColumns = new List<SObjectTableColumn>();
-		for (String fieldPathStr : this.selectFields) {
-			ISObjectTableFieldPath fieldPathItem = this.fieldPathConstructor.construct(this.sObjectName, fieldPathStr);
+		for (String fieldPathStr : this.inputData.selectFields) {
+			ISObjectTableFieldPath fieldPathItem = this.fieldPathConstructor.construct(this.inputData.sObjectName, fieldPathStr);
 			Schema.DisplayType fieldType = fieldPathItem.targetFieldDescribe().isNameField()
 				? Schema.DisplayType.REFERENCE
 				: fieldPathItem.targetFieldDescribe().getType();
@@ -149,9 +148,9 @@ public abstract class SobjectTableService {
 		this.referenceFieldPaths = new List<String>();
 		this.targetFieldPathItemByPath = new Map<String, ISObjectTableFieldPath>();
 
-		for (String fieldPathStr : this.selectFields) {
+		for (String fieldPathStr : this.inputData.selectFields) {
 			fieldPathStr = fieldPathStr.toLowerCase();
-			ISObjectTableFieldPath fieldPath = this.fieldPathConstructor.construct(this.sObjectName, fieldPathStr);
+			ISObjectTableFieldPath fieldPath = this.fieldPathConstructor.construct(this.inputData.sObjectName, fieldPathStr);
 			this.targetFieldPathItemByPath.put(fieldPath.path().toLowerCase(), fieldPath);
 
 			this.fieldPathsToRetrieve.add(fieldPath.path().toLowerCase());
@@ -171,30 +170,59 @@ public abstract class SobjectTableService {
 	}
 
 
+	public class SObjectTableInputData {
+		@AuraEnabled
+		public String sobjectName;
+		@AuraEnabled
+		public List<String> selectFields;
+		@AuraEnabled
+		public ConditionBlock conditionBlock;
+		@AuraEnabled
+		public OrderBy orderBy;
+		@AuraEnabled
+		public Integer limitRecords;
+		@AuraEnabled
+		public Integer offsetRecords;
+	}
+	
 	public class ConditionBlock {
-		public List<ConditionBlock> blocks;
-		public List<Condition> conditions;
-		public String operator;
+		@AuraEnabled
+		public List<ConditionBlock> blocks {get; set;}
+		@AuraEnabled
+		public List<Condition> conditions {get; set;}
+		@AuraEnabled
+		public String operator {get; set;}
 	}
 
 	public class Condition {
-		public SOQLFunction function;
-		public String fieldName;
-		public String operator;
-		public String value;
-		public List<String> values;
+		@AuraEnabled
+		public SOQLFunction function {get; set;}
+		@AuraEnabled
+		public String fieldName {get; set;}
+		@AuraEnabled
+		public String operator {get; set;}
+		@AuraEnabled
+		public String value {get; set;}
+		@AuraEnabled
+		public List<String> values {get; set;}
 	}
 
 	public class OrderBy {
-		public List<String> orderByFields;
-		public Boolean isDESC;
-		public Boolean isNullsFirst;
+		@AuraEnabled
+		public List<String> orderByFields {get; set;}
+		@AuraEnabled
+		public Boolean isDESC {get; set;}
+		@AuraEnabled
+		public Boolean isNullsFirst {get; set;}
 	}
 
 	public class SOQLFunction {
-		public String functionName;
-		public String fieldName;
-		public String alias;
+		@AuraEnabled
+		public String functionName {get; set;}
+		@AuraEnabled
+		public String fieldName {get; set;}
+		@AuraEnabled
+		public String alias {get; set;}
 
 		public SOQLFunction(String functionName) {
 			this.functionName = functionName;
